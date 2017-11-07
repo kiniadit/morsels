@@ -1,0 +1,24 @@
+[{
+    "fields": {
+       "name":"The First Morsel",
+       "welcome_text": "Hello there, welcome to your first morsel!",
+       "completed_text": "Congratulations! You just completed your morsel!",
+       "status": "not_started",
+       "created": "2017-10-31 16:29:30.381445",
+       "edited": "2017-10-31 16:29:30.381445"
+    },
+    "model": "app.morsel",
+    "pk": 1
+},
+{
+    "fields": {
+        "name":"The Second Morsel",
+        "welcome_text": "This is a morsel too!",
+        "completed_text": "Wow! This wasn't any easy one but you did it!",
+        "status": "not_started",
+        "created": "2017-10-31 16:29:30.381445",
+        "edited": "2017-10-31 16:29:30.381445"
+    },
+    "model": "app.morsel",
+    "pk": 2
+}]

@@ -1,0 +1,42 @@
+[
+    {
+        "fields": {
+            "answer_text": "buckman park",
+            "question": 1,
+            "created": "2017-10-31 16:29:30.381445-07:00",
+            "edited": "2017-10-31 16:29:30.381445-07:00"
+        },
+        "model": "app.answer",
+        "pk":1
+    },
+    {
+        "fields": {
+            "answer_text": "black",
+            "question": 2,
+            "created": "2017-10-31 16:29:30.381445-07:00",
+            "edited": "2017-10-31 16:29:30.381445-07:00"
+        },
+        "model": "app.answer",
+        "pk":2
+    },
+    {
+        "fields": {
+            "answer_text": "10",
+            "question": 3,
+            "created": "2017-10-31 16:29:30.381445-07:00",
+            "edited": "2017-10-31 16:29:30.381445-07:00"
+        },
+        "model": "app.answer",
+        "pk":3
+    },
+    {
+        "fields": {
+            "answer_text": "white",
+            "question": 4,
+            "created": "2017-10-31 16:29:30.381445-07:00",
+            "edited": "2017-10-31 16:29:30.381445-07:00"
+        },
+        "model": "app.answer",
+        "pk":4
+    }
+]
