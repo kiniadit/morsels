@@ -1,16 +1,21 @@
 from random import randrange
+import time
+import os
+
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-import os
-from app import urls
-from app.models import Morsel, Question, Answer, Response
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView, DetailView
+from django.contrib import messages
+
+from app import urls
+from app.models import Morsel, Question, Answer, Response
+
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
-from django.views.generic import ListView, DetailView
 
 morsel_id_session = None
 incorrect_replies = ["Sorry, you have the incorrect answer. Try again!", 
@@ -68,9 +73,11 @@ def start_hunt(request, morsel_id):
     twilio_client = Client(twilio_account_sid,twilio_auth_token)
     morsel_id_session = int(morsel_id)
     body = morsel.welcome_text + " Respond with 'yes' to start"
-    message = twilio_client.messages.create('+16467084542',body=body, from_=twilio_number)
-    
-    return HttpResponse("Message %s sent" % message.sid, content_type='text/plain', status=200)
+    outgoing_message = twilio_client.messages.create('+16467084542',body=body, from_=twilio_number)
+    time.sleep(2)
+    status_message = twilio_client.messages(outgoing_message.sid).fetch().status
+    messages.success(request, "Message sent succesfully") if status_message == 'delivered' else  messages.success(request, "Message not sent succesfully")
+    return HttpResponseRedirect('/app/morsels/')
 
 def check_answer(request_text, question_id):
     answer_text = Answer.objects.filter(question_id=question_id).first().answer_text
