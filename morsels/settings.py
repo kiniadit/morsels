@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'twilio',
     'debug_toolbar',
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [

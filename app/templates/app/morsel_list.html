@@ -1,5 +1,8 @@
 {% extends "app/base.html" %}
-
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 {% block content %}
     <h2>Morsels</h2>
     <ul>
@@ -11,14 +14,8 @@
         {% endfor %}
     </ul>
     {% if messages %}
-    <ul class="messages">
         {% for msg in messages %}       
-        <li>
-            <div class="alert alert-{{msg.level_tag}}" role="alert">
-            {{msg.message}}
-            </div>
-        </li>
+            {% bootstrap_alert msg.message alert_type=msg.level_tag %}
         {% endfor %}
-    </ul>
     {% endif %}
 {% endblock %}

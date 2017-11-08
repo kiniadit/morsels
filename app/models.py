@@ -51,13 +51,12 @@ class Response(DateTime):
     def __str__(self):
         return self.response_text
 
-# class Session?
-
+class AnonymousUser(models.Model):
+    phone_number = models.CharField(max_length=40, blank=True)
+    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True)
-    location = models.CharField(max_length=30, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
+    phone_number = models.CharField(max_length=40, blank=True)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
