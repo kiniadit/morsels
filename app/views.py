@@ -94,7 +94,7 @@ def check_answer(request_text, question_id):
 
 def create_morsel(request):
     if request.method == 'POST':
-        if request.POST['action'] == "+":
+        if request.POST.get('action') == "+":
             extra = int(request.session['extra']) + 1
             form = MorselCreationForm(initial=request.POST)
             formset = formset_factory(QuestionCreationForm, extra=extra)()
@@ -102,8 +102,7 @@ def create_morsel(request):
             extra = int(request.session['extra'])
             form = MorselCreationForm(request.POST)
             formset = formset_factory(QuestionCreationForm, extra=extra)(request.POST)
-
-            if form.is_valid() and formet.is_valid():
+            if form.is_valid() and formset.is_valid():
                 name = form.cleaned_data["name"]
                 start_time = form.cleaned_data["start_time"]
                 end_time = form.cleaned_data["end_time"]
@@ -118,11 +117,11 @@ def create_morsel(request):
                 )
                 m.save()
                 # this order is important to be able to access the relations
-                for form in formset:
+                for i,form in enumerate(formset):
                     question_text = form.cleaned_data["question_text"]
                     q = Question(
                         question_text=question_text,
-                        model = m
+                        morsel = m
                     )
                     q.save()
                 return HttpResponseRedirect('/app/morsels/')
