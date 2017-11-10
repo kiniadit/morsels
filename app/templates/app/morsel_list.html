@@ -5,6 +5,14 @@
 {% bootstrap_messages %}
 {% block content %}
     <h2>Morsels</h2>
+    {% if user.is_authenticated %}
+        <p>hello</p>
+        <p>welcome {{ user.username }}</p>
+        <p><a href="/logout">Logout</a></p>
+    {% else %}
+        <p><a href="/login">Login</a></p>
+        <p><a href="/app/register">Register</a></p>
+    {% endif %}
     <ul>
         {% for morsel in object_list %}
             <li>{{ morsel.name }} 

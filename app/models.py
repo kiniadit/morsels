@@ -52,11 +52,11 @@ class Response(DateTime):
         return self.response_text
 
 class AnonymousUser(models.Model):
-    phone_number = models.CharField(max_length=40, blank=True)
+    phonenumber = models.CharField(max_length=40, blank=True)
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=40, blank=True)
+    phonenumber = models.CharField(max_length=40, blank=True)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

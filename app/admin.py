@@ -9,12 +9,12 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class ProfileInline(admin.TabularInline):
     model = Profile
-    fields = ('bio',)
+    fields = ('phonenumber',)
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'profile_bio','email', 'first_name', 'last_name')
-    def profile_bio(self, instance):
-        return instance.profile.bio
+    list_display = ('username', 'profile_phonenumber','email', 'first_name', 'last_name')
+    def profile_phonenumber(self, instance):
+        return instance.profile.phonenumber
     inlines = (ProfileInline,)
     list_filter = ('is_staff', 'is_superuser')
 

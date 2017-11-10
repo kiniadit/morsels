@@ -1,0 +1,22 @@
+{% extends "app/base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+<div class="container">
+    <form method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {{ formset.management_form }}
+        <table>
+            {% for form in formset %}
+                {{ form }}
+            {% endfor %}
+            <input type="submit" name="action" value="+">
+        </table>
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Create!
+            </button>
+        {% endbuttons %}
+    </form>
+</div>    
+{% endblock %}

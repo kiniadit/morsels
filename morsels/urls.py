@@ -16,6 +16,7 @@ Including another URLconf
 from django.shortcuts import redirect
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 import debug_toolbar
 
 urlpatterns = [
@@ -23,4 +24,6 @@ urlpatterns = [
     url(r'^app/', include('app.urls'), name='app'),
     url(r'^$', lambda r: redirect('/app/'), name='root-redirect'),
     url(r'^__debug__/', include(debug_toolbar.urls)),
+    url(r'^login/$', auth_views.login),
+    url(r'^logout/$', auth_views.logout)
 ]

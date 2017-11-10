@@ -10,6 +10,12 @@ from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
+from django import forms
+from django.forms import formset_factory
+from .forms import UserRegistrationForm, MorselCreationForm, QuestionCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
 
 from app import urls
 from app.models import Morsel, Question, Answer, Response
@@ -85,3 +91,64 @@ def check_answer(request_text, question_id):
         return response.strip().lower()
     else:
         return None
+
+def create_morsel(request):
+    if request.method == 'POST':
+        if request.POST['action'] == "+":
+            extra = int(request.session['extra']) + 1
+            form = MorselCreationForm(initial=request.POST)
+            formset = formset_factory(QuestionCreationForm, extra=extra)()
+        else:
+            extra = int(request.session['extra'])
+            form = MorselCreationForm(request.POST)
+            formset = formset_factory(QuestionCreationForm, extra=extra)(request.POST)
+
+            if form.is_valid() and formet.is_valid():
+                name = form.cleaned_data["name"]
+                start_time = form.cleaned_data["start_time"]
+                end_time = form.cleaned_data["end_time"]
+                welcome_text = form.cleaned_data["welcome_text"]
+                completed_text = form.cleaned_data["completed_text"]
+                m = Morsel(
+                    name=name, 
+                    start_time = start_time, 
+                    end_time = end_time, 
+                    welcome_text = welcome_text, 
+                    completed_text = completed_text
+                )
+                m.save()
+                # this order is important to be able to access the relations
+                for form in formset:
+                    question_text = form.cleaned_data["question_text"]
+                    q = Question(
+                        question_text=question_text,
+                        model = m
+                    )
+                    q.save()
+                return HttpResponseRedirect('/app/morsels/')
+        request.session["extra"] = extra           
+    else:
+        form = MorselCreationForm()
+        formset = formset_factory(QuestionCreationForm, extra=1)()
+        request.session["extra"] = 1
+    return render(request, 'app/create_morsel.html', {'form' : form, 'formset' : formset })
+
+#user registration
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data
+            username =user['username']
+            email = user['email']
+            password = user['password']
+            if not (User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists()):
+                User.objects.create_user(username, email, password)
+                user = authenticate(username = username, password = password)
+                login(request, user)
+                return HttpResponseRedirect('/')
+            else:
+                raise forms.ValidationError('Looks like a username with that email or password already exists')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'app/register.html', {'form' : form})

@@ -1,0 +1,24 @@
+{% extends "app/base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+<div class="container">
+    <form method="post" class="form-vertical">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <div class="col-md-2 control-label">
+                    {% bootstrap_label field.name %}
+                </div>
+                <div class="col-md-4">
+                    {% bootstrap_field field show_label=False form_group_class=None %}
+                </div>
+            </div>
+        {% endfor %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Login!
+            </button>
+        {% endbuttons %}
+    </form>
+</div>    
+{% endblock %}
