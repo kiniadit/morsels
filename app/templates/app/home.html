@@ -1,0 +1,16 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block content %}
+    <div class="jumbotron text-center">
+        <div class="row">
+            <div class="col-sm-4">
+               <img class="img-fluid" src="{% static 'app/images/message_ios.png'%}" alt="Message Example"/>
+            </div>
+            <div class="col-sm-8">
+                <h1> Register SMS and Hunt! </h1> 
+                <p> No app. No bullshit. Just hunt. </p> 
+                <a class="btn btn-outline-primary" href="{% url 'app:register' %}" role="button">Sign Up</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

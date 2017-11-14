@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView
+from django.views.generic import TemplateView
 from django.contrib import messages
 from django import forms
 from django.forms import formset_factory
@@ -88,7 +89,7 @@ def start_hunt(request, morsel_id):
 def check_answer(request_text, question_id):
     answer_text = Answer.objects.filter(question_id=question_id).first().answer_text
     if request_text.strip().lower() == answer_text.strip().lower():
-        return response.strip().lower()
+        return request_text.strip().lower()
     else:
         return None
 
@@ -151,3 +152,7 @@ def register(request):
     else:
         form = UserRegistrationForm()
     return render(request, 'app/register.html', {'form' : form})
+
+class HomePageView(TemplateView):
+
+    template_name = 'app/home.html'
