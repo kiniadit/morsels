@@ -1,0 +1,151 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="py-5 bg-white">
+    <div class="container" >
+            <br />
+            <br />
+            <br />
+        
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                Our FAQ aims to help answer common questions related to <strong>Crumbly</strong>. If you cannot find an answer to your question, 
+                make sure to contact us. 
+            </div>
+        
+            <br />
+        
+            <div class="" id="accordion">
+                <div class="faqHeader">General questions</div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Is account registration required?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="card-block">
+                            Account registration at <strong>Crumbly</strong> is required only if you want to create and manage Crumbs. 
+                            No account is necessary to play.
+                        </div>
+                    </div>
+                </div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTen">What is a Crumb?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseTen" class="panel-collapse collapse">
+                        <div class="card-block">
+                            A Crumb is a SMS-based treasure hunt. 
+                        </div>
+                    </div>
+                </div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven">Do I need to pay to use Crumbly?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseEleven" class="panel-collapse collapse">
+                        <div class="card-block">
+                            For now, to keep the costs low we need to charge for Crumbs. We accept <strong>USD</strong>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="faqHeader">Creators</div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">How do I create a new Crumb?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="card-block">
+                            Follow these steps:
+                            </br>
+                            <ol>
+                                <li> Login or Signup to get access</li>
+                                <li> Click on My Crumbs to view list of crumbs you have created </li>
+                                <li> Click on Create to pull up form for creating new Crumbs </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Do I have to set a start and end time for each Crumb?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="card-block">
+                            No, you do not require a start and end time for each crumb. If you leave these fields blank,
+                            then your treasure hunt will remain active indefinitely
+                        </div>
+                    </div>
+                </div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive">Can I create image clues?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse">
+                        <div class="card-block">
+                            Not yet. This is an upcoming feature. Stay tuned.
+                        </div>
+                    </div>
+                </div>
+                <div class="card ">
+                        <div class="card-header">
+                            <h4 class="card-header">
+                                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix">What about engagement metrics?</a>
+                            </h4>
+                        </div>
+                        <div id="collapseSix" class="panel-collapse collapse">
+                            <div class="card-block">
+                                This feature will be coming soon. 
+                            </div>
+                        </div>
+                    </div>
+        
+                <div class="faqHeader">Players</div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">How do I join a Crumb?</a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse">
+                        <div class="card-block">
+                            <ul>
+                                <li><strong>With a Crumb Code: </strong> If you have a Crumb Code, text "crumb <join code>" to +1-(201)-730-4915  </li>
+                                    
+                                <li><strong>Via email:</strong> You might be invited to a Crumb via email. Click the link and follow instructions</li>
+                            </ul> 
+                        </div>
+                    </div>
+                </div>
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-header">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven"> How can I find more Crumbs? </a>
+                        </h4>
+                    </div>
+                    <div id="collapseSeven" class="panel-collapse collapse">
+                        <div class="card-block">
+                            <p>Look out for Crumb codes at local retailers, coffee shops. Sometimes we hide them on Craigslists
+                            Other times they might be stuck to a telephone post. </p>
+                            <p> We will be releasing a list of publicly avaialble Crumbs shortly! </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

@@ -18,6 +18,11 @@ class UserRegistrationForm(forms.Form):
         max_length = 32,
         widget = forms.PasswordInput()
     )
+    newsletter_signup = forms.BooleanField(
+        required = False,
+        label = 'Would you like to receive occasional emails?',
+        widget = forms.CheckboxInput()
+    )
 
 class MorselCreationForm(forms.Form):
     start_time = forms.DateTimeField(
@@ -48,12 +53,28 @@ class MorselCreationForm(forms.Form):
         max_length = 200,
         widget = forms.TextInput(attrs={'placeholder' : 'Be nice, say thank you to your players!'})
     )
+    public_enabled = forms.BooleanField(
+        required = False,
+        label = 'Do you want to make this Crumble public? (Anyone will be able to join)',
+        widget = forms.CheckboxInput()
+    )
 
 
-class QuestionCreationForm(forms.Form):
+class QuestionAnswerCreationForm(forms.Form):
     question_text = forms.CharField(
         required = False,
-        label = 'Q: ', 
+        label = 'Question', 
         max_length = 200,
         widget = forms.TextInput(attrs={'placeholder' : 'Ask something fun!'}) 
+    )
+    answer_text = forms.CharField(
+        required = False,
+        label = 'Answer', 
+        max_length = 200,
+        widget = forms.TextInput(attrs={'placeholder' : 'and the answer is...'}) 
+    )
+    
+class NewsletterSignupForm(forms.Form):
+    email = forms.CharField(
+        required = False
     )

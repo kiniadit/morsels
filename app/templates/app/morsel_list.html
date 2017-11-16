@@ -17,6 +17,7 @@
         {% for morsel in object_list %}
             <li>{{ morsel.name }} 
                 <a href="{%url 'app:morsel_detail' morsel.id%}">View</a>
+                <a href="{%url 'app:edit_morsel' morsel.id %}">Edit</a>
                 <a href="{%url 'app:start_hunt' morsel.id%}">Send! </a>
             </li>
         {% endfor %}

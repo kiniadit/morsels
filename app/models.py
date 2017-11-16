@@ -19,16 +19,20 @@ class Morsel(DateTime):
     completed_text = models.CharField(max_length = 200)
     status = models.CharField(max_length = 80)
 
+    public_enabled = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
 
+#set up a default ordering
 class Question(DateTime):
     question_text = models.CharField(max_length = 400)
     morsel = models.ForeignKey(Morsel, on_delete = models.CASCADE, related_name = "questions")
     
     def __str__(self):
         return self.question_text
-
+    
+    #replace with Model.get_next_by_FOO
     def next(self):
         morsel = Morsel.objects.get(pk=self.morsel_id)
         next_q = morsel.questions.order_by('id').filter(id__gt=self.id)
@@ -50,13 +54,11 @@ class Response(DateTime):
 
     def __str__(self):
         return self.response_text
-
-class AnonymousUser(models.Model):
-    phonenumber = models.CharField(max_length=40, blank=True)
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phonenumber = models.CharField(max_length=40, blank=True)
+    newsletter_subscription_active = models.BooleanField(default=False)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

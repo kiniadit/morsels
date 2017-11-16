@@ -30,7 +30,7 @@ TWILIO_NUMBER=env('TWILIO_NUMBER')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [env('NGROK_SERVER'),'localhost','127.0.0.1']
+ALLOWED_HOSTS = ['961f8b1b.ngrok.io','localhost','127.0.0.1']
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'twilio',
     'debug_toolbar',
     'bootstrap3',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'app/static')
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/ls'
+LOGOUT_REDIRECT_URL = '/'
+
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(BASE_DIR, 'extra-styles/scss'),
+    os.path.join(BASE_DIR, 'node_modules'),
+]
