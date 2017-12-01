@@ -32,6 +32,10 @@ incorrect_replies = ["Sorry, you have the incorrect answer. Try again!",
 class MorselList(ListView):
     model = Morsel
 
+def morsel_list_public(request):
+    morsels = Morsel.objects.all()
+    return render(request,'app/morsel_list_public.html',{'morsels':morsels})
+
 class MorselDetailView(DetailView):
    model = Morsel
 
@@ -42,7 +46,6 @@ def send_morsel(request):
     current_morsel_id = morsel_id_session if morsel_id_session else request.session.get('morsel_id')
     current_question_id = request.session.get('current_question_id')
     request_text = request.POST.get('Body')
-
     if current_morsel_id:
         if current_question_id:
             question = get_object_or_404(Question, pk=int(current_question_id))
@@ -95,6 +98,7 @@ def check_answer(request_text, question_id):
         return None
 
 def create_morsel(request):
+    request.session["extra"] = 1
     if request.method == 'POST':
         if request.POST.get('action') == "+":
             extra = int(request.session['extra']) + 1
@@ -133,9 +137,10 @@ def create_morsel(request):
                         question_text=question_text,
                         morsel = m
                     )
-                    answer = Answer(question=q)
-                    q.answer.answer_text = form.cleaned_data["answer_text"]
                     q.save()
+                    a = Answer(question=q)
+                    a.answer_text = form.cleaned_data["answer_text"]
+                    a.save()
                 return HttpResponseRedirect('/app/morsels/')
         request.session["extra"] = extra           
     else:
@@ -144,38 +149,57 @@ def create_morsel(request):
         request.session["extra"] = 0
     return render(request, 'app/create_morsel.html', {'form' : form, 'formset' : formset })
 
-def edit_morsel(request, morsel_id=None):
-    if request.method == 'POST':
-        extra = int(request.session['extra'])
-        form = MorselCreationForm(request.POST)
-        formset = formset_factory(QuestionAnswerCreationForm, extra=extra)(request.POST)
-        if form.is_valid() and formset.is_valid():
-            name = form.cleaned_data["name"]
-            start_time = form.cleaned_data["start_time"]
-            end_time = form.cleaned_data["end_time"]
-            welcome_text = form.cleaned_data["welcome_text"]
-            completed_text = form.cleaned_data["completed_text"]
-            public_enabled = form.cleaned_data["public_enabled"]
-            m = Morsel(
-                name=name, 
-                start_time = start_time, 
-                end_time = end_time, 
-                welcome_text = welcome_text, 
-                completed_text = completed_text,
-                public_enabled = public_enabled
-            )
-            m.save()
-            # this order is important to be able to access the relations
-            for form in formset:
-                question_text = form.cleaned_data["question_text"]
-                q = Question(
-                    question_text=question_text,
-                    morsel = m
-                )
-                answer = Answer(question=q)
-                q.answer.answer_text = form.cleaned_data["answer_text"]
-                q.save()
+def edit_morsel(request, morsel_id):
     morsel = get_object_or_404(Morsel.objects.prefetch_related('questions'), pk=morsel_id)
+    if request.method == 'POST':
+        if request.POST.get('action') == "+":
+            extra = morsel.questions.all().count() + 1
+            request.session["extra"] = extra
+            q = Question(morsel=morsel, question_text="")
+            q.save()
+            Answer(question=q, answer_text="").save()
+            form = MorselCreationForm(initial=request.POST)
+            formset = formset_factory(QuestionAnswerCreationForm, extra=extra, max_num=extra)(
+            initial=[{"question_text":request.POST.get("form-"+str(i)+"-question_text") if request.POST.get("form-"+str(i)+"-question_text") else "",
+            "answer_text":request.POST.get("form-"+str(i)+"-answer_text") if request.POST.get("form-"+str(i)+"-answer_text") else ""
+            } for i in range(extra)])
+            return render(request, 'app/edit_morsel.html', {'form':form, 'formset':formset})
+        elif request.POST.get('action') == "-":
+            extra = morsel.questions.all().count() - 1
+            request.session["extra"] = extra
+            q = morsel.questions.all().last()
+            q.delete()
+            form = MorselCreationForm(initial=request.POST)
+            formset = formset_factory(QuestionAnswerCreationForm, extra=extra, max_num=extra)(
+            initial=[{"question_text":request.POST.get("form-"+str(i)+"-question_text") if request.POST.get("form-"+str(i)+"-question_text") else "",
+            "answer_text":request.POST.get("form-"+str(i)+"-answer_text") if request.POST.get("form-"+str(i)+"-answer_text") else ""
+            } for i in range(extra)])
+            return render(request, 'app/edit_morsel.html', {'form':form, 'formset':formset})
+        else:
+            extra = int(request.session['extra'])
+            form = MorselCreationForm(request.POST)
+            formset = formset_factory(QuestionAnswerCreationForm, extra=extra)(request.POST)
+
+            if form.is_valid() and formset.is_valid():
+                morsel.name = form.cleaned_data["name"]
+                morsel.start_time = form.cleaned_data["start_time"]
+                morsel.end_time = form.cleaned_data["end_time"]
+                morsel.welcome_text = form.cleaned_data["welcome_text"]
+                morsel.completed_text = form.cleaned_data["completed_text"]
+                morsel.public_enabled = form.cleaned_data["public_enabled"]
+                # this order is important to be able to access the relations
+                for i,form in enumerate(formset):
+                    if morsel.questions:
+                        morsel.questions.all()[i].question_text=form.cleaned_data["question_text"]
+                        morsel.questions.all()[i].answer.answer_text=form.cleaned_data["answer_text"]
+                        morsel.questions.all()[i].save()
+                        morsel.questions.all()[i].answer.save()
+                    else:
+                        question = Question(question_text=form.cleaned_data["question_text"], morsel=morsel)
+                        answer = Answer(answer_text=form.cleaned_data["answer_text"], question=question)
+                        question.save()
+                        answer.save()
+                morsel.save()
     form = MorselCreationForm(initial={
         "start_time" : morsel.start_time,
         "end_time" : morsel.end_time,
@@ -184,8 +208,8 @@ def edit_morsel(request, morsel_id=None):
         "completed_text" : morsel.completed_text,
         "public_enabled" : morsel.public_enabled
     })
-    initial_formset_values = [{"question_text":question.question_text,"answer_text":question.answer.answer_text} \
-    for question in morsel.questions.select_related("answer").all()]
+    request.session['extra']=morsel.questions.all().count()
+    initial_formset_values = [{"question_text":question.question_text,"answer_text":question.answer.answer_text} for question in morsel.questions.select_related("answer").all()]
     formset = formset_factory(QuestionAnswerCreationForm, extra=1, max_num=len(morsel.questions.all()))(initial=initial_formset_values)
     return render(request, 'app/edit_morsel.html', {'form':form, 'formset':formset})
 
@@ -194,14 +218,14 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.cleaned_data
-            username =user['username']
-            email = user['email']
-            password = user['password']
-            newsletter_signup = user['newsletter_signup']
+            username =form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            newsletter_signup = form.cleaned_data['newsletter_signup']
             if not (User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists()):
                 User.objects.create_user(username, email, password)
-                User.profile.newsletter_subscription_active = True if user['newsletter_signup'] == 'True' else False
+                user = User.objects.filter(username=username).first()
+                user.profile.newsletter_subscription_active = True if form.cleaned_data['newsletter_signup'] == 'True' else False
                 user.save()
                 user = authenticate(username = username, password = password)
                 login(request, user)
@@ -210,7 +234,7 @@ def register(request):
                 user = User.objects.filter(email=email).first()
                 user.username = username
                 user.set_password(password)
-                User.profile.newsletter_subscription_active = True if user['newsletter_signup'] == 'True' else False
+                user.profile.newsletter_subscription_active = True if form.cleaned_data['newsletter_signup'] == 'True' else False
                 user.save()
                 auth_user = authenticate(username = username, password = password)
                 login(request, auth_user)

@@ -26,7 +26,7 @@ class Morsel(DateTime):
 
 #set up a default ordering
 class Question(DateTime):
-    question_text = models.CharField(max_length = 400)
+    question_text = models.CharField(max_length = 400, blank=True, null=True)
     morsel = models.ForeignKey(Morsel, on_delete = models.CASCADE, related_name = "questions")
     
     def __str__(self):
@@ -40,7 +40,7 @@ class Question(DateTime):
         return next_q.first() if next_q.first() else None
     
 class Answer(DateTime):
-    answer_text = models.CharField(max_length = 100)
+    answer_text = models.CharField(max_length = 100, blank=True, null=True)
     question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name = "answer")
 
     def __str__(self):

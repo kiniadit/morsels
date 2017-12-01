@@ -1,0 +1,32 @@
+{% extends "app/base.html" %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% block content %}
+    <h2>Public Crumbles</h2>
+    <div class="row">
+        <div class="col-md-8 col-offset-md-2">
+            <p> This is a list of all public Crumbles. </p>
+            <table>
+                <thead>
+                    <th>Crumb Name</th>
+                    <th>Description</th>
+                </thead>
+                {% for morsel in morsels %}
+                <tr>
+                    <td>{{ morsel.name }}</td>
+                    <td>{{ morsel.welcome_text }}</td>
+                    <td><a class="btn btn-primary" href="{%url 'app:start_hunt' morsel.id%}">Send!</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    
+    {% if messages %}
+        {% for msg in messages %}       
+            {% bootstrap_alert msg.message alert_type=msg.level_tag %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}

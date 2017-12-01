@@ -4,24 +4,28 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block content %}
-    <h2>Morsels</h2>
-    {% if user.is_authenticated %}
-        <p>hello</p>
-        <p>welcome {{ user.username }}</p>
-        <p><a href="/logout">Logout</a></p>
-    {% else %}
-        <p><a href="/login">Login</a></p>
-        <p><a href="/app/register">Register</a></p>
-    {% endif %}
-    <ul>
-        {% for morsel in object_list %}
-            <li>{{ morsel.name }} 
-                <a href="{%url 'app:morsel_detail' morsel.id%}">View</a>
-                <a href="{%url 'app:edit_morsel' morsel.id %}">Edit</a>
-                <a href="{%url 'app:start_hunt' morsel.id%}">Send! </a>
-            </li>
-        {% endfor %}
-    </ul>
+    
+    <div class="row">
+        <div class="col-md-8 col-offset-md-2">
+                <h2>My Morsels</h2>
+                {% if user.is_authenticated %}
+                    <p>Hello! Welcome <strong>{{ user.username }}</strong></p>
+                {% endif %}
+                <table>
+                    <thead>
+                        <th>Crumb Name</th>
+                    </thead>
+                    {% for morsel in object_list %}
+                    <tr>
+                        <td>{{ morsel.name }}</td>
+                        <td class="active"><a class="btn btn-primary" href="{%url 'app:morsel_detail' morsel.id%}">View</a> </td>    
+                        <td><a class="btn btn-primary" href="{%url 'app:edit_morsel' morsel.id %}">Edit</a></td>
+                        <td><a class="btn btn-primary" href="{%url 'app:start_hunt' morsel.id%}">Send!</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+        </div>
+    </div> 
     {% if messages %}
         {% for msg in messages %}       
             {% bootstrap_alert msg.message alert_type=msg.level_tag %}

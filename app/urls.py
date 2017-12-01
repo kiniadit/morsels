@@ -4,12 +4,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.views import login, logout
 from app.views import send_morsel, start_hunt, MorselList, MorselDetailView,\
 register, create_morsel, HomePageView, FAQPageView, AboutPageView,\
-newsletter_signup, edit_morsel
+newsletter_signup, edit_morsel, morsel_list_public
 
 app_name = 'app'
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
     url(r'^morsels/$', MorselList.as_view(), name='morsel_list'),
+    url(r'^morsels_public/$', morsel_list_public, name='morsel_list_public'),
     url(r'^morsels/send/$', send_morsel, name='morsel_send'),
     url(r'^morsels/(?P<morsel_id>[0-9]+)/start_hunt/$', start_hunt, name='start_hunt'),
     url(r'^register/', register, name='register'),
